@@ -31,6 +31,8 @@ export interface Assessment {
   question_count: number;
   total_points: number;
   is_open: boolean;
+  is_closed?: boolean;
+  is_upcoming?: boolean;
   questions?: AssessmentQuestion[];
 }
 
