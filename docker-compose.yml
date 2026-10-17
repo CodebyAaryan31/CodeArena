@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./codearena.db
+      - SECRET_KEY=codearena-super-secure-production-secret-key-32b
+      - RUNNER_URL=http://runner:8001
+      - CORS_ORIGINS=["http://localhost:5173","http://localhost:3000","http://localhost:80"]
+    volumes:
+      - ./backend/codearena.db:/app/codearena.db
+    depends_on:
+      - runner
+
+  runner:
+    build:
+      context: ./runner
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - RUNNER_PORT=8001
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
